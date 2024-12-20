@@ -331,8 +331,8 @@ class LD2410BLE:
             await self._ensure_connected()
             _LOGGER.debug("ensured connection - initialising")
             await self.initialise()
-        except BleakNotFoundError:
-            _LOGGER.debug("failed to ensure connection - backing off")
+        except (BleakNotFoundError, BleakError) as error:
+            _LOGGER.debug("failed to ensure connection - backing off: %s", error)
             await asyncio.sleep(BLEAK_BACKOFF_TIME)
             _LOGGER.debug("reconnecting again")
             asyncio.create_task(self._reconnect())
